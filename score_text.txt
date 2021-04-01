@@ -1,0 +1,23 @@
+Indicate your level of support with the statement: It is really a matter of some people not trying hard enough; if blacks would only try harder, they could be as well-off as whites”?
+Strongly agree, Somewhat agree, Neither agree or disagree, Somewhat disagree, Strongly disagree
+
+Indicate your level of support with this statement: "Generations of slavery and discrimination have created conditions that make it difficult for blacks to work their way out of the lower class."
+Strongly agree, Somewhat agree, Neither agree or disagree, Somewhat disagree, Strongly disagree
+
+Rate the extent to which Black Americans are lazy rather than hard working:
+Extremely Hardworking, Moderately Hardworking, Marginally Hardworking, Neutral, Marginally Lazy, Moderately Lazy, Extremely Lazy
+
+Rate the extent to which blacks are unintelligent rather than intelligent:
+Extremely Intelligent, Moderately Intelligent, Marginally Intelligent, Neutral, Marginally Unintelligent, Moderately Intelligent, Extremely Unintelligent
+
+Do you think that what happens generally to the black people in this country will have something to do with what happens in your life?
+Yes, No
+
+On the whole, would you say that the economic position of blacks is better, about the same, or worse than that of whites?
+Better, Same, Worse
+
+Do you agree with the statement “The American political system is set up to see Black Americans fail”? - Selected Choice
+Yes, No, Explain your opinion here
+
+In comparison to your own financial interests, how important are issues of race in your decision of who you support politically?
+Extremely important, Very important, Moderately important, Slightly important, Not at all important
