@@ -69,7 +69,7 @@ class Person:
             "Independent" : Party.IND,
             "" : Party.X
         }
-        self.party = p.get(arg)
+        self.party = p.get(arg, Party.X)
 
     def setVote(self, arg):
         v = {
@@ -78,7 +78,7 @@ class Person:
             "Rather not say" : Vote.ND,
             "" : Vote.X
         }
-        self.vote = v.get(arg)
+        self.vote = v.get(arg, Vote.X)
 
     def setIdeology(self, arg):
         i = {
@@ -94,6 +94,8 @@ class Person:
             "0k-24k" : Income.A,
             "25k-50k" : Income.B,
             "51k-100k" : Income.C,
+            "50k-100k" : Income.C,
+            "100k-300k" : Income.D,
             "101k-300k" : Income.D, # ????
             "300k-500k" : Income.E,
             "500k+" : Income.F,
@@ -127,7 +129,7 @@ class Person:
 
     def setRegion(self, arg):
         r = {
-            "Foriegn Country" : Region.FORIEGN,
+            "Foreign Country" : Region.FOREIGN,
             "Northeast" : Region.NORTHEAST,
             "Mid Atlantic" : Region.MIDATLANTIC,
             "Southeast" : Region.SOUTHEAST,
@@ -186,6 +188,18 @@ class Person:
         self.score.updateLF(stuff[22])
         self.score.updateLF(stuff[24])
         self.treatment = treatment
+        if self.getLF()>=6:
+            self.LF = "HIGH"
+        elif self.getLF()<=-1:
+            self.LF = "LOW"
+        else:
+            self.LF = "MID"
+        if self.getRR()<=-1:
+            self.RR = "HIGH"
+        elif self.getRR()>=6:
+            self.RR = "LOW"
+        else:
+            self.RR = "MID"
 
     def getRace(self):
         return self.race
@@ -309,4 +323,52 @@ class Person:
         s += "\t" + "Pandemic: " + self.treatment.getPandemic()
         s += "\n" + "--------------------------------------"
         s += "--------------------------------------------------"
+        return s
+
+    def lst(self):
+        x = self.income.name
+        income = ""
+        if x == "A":
+            income = "0 - 24k"
+        elif x == "B":
+            income = "25k - 50k"
+        elif x == "C":
+            income = "51k - 100k"
+        elif x == "D":
+            income = "101k - 300k"
+        elif x == "E":
+            income = "301k - 500k"
+        elif x == "F":
+            income = "500k+"
+        else:
+            income = "X"
+        s = []
+        s.append(self.race.name)
+        s.append(self.gender.name)
+        s.append(self.age.name)
+        s.append(self.education.name)
+        s.append(self.party.name)
+        s.append(self.vote.name)
+        s.append(self.ideology.name)
+        s.append(income)
+        s.append(self.union.name)
+        s.append(self.athlete.name)
+        s.append(self.friend.name)
+        s.append(self.region.name)
+        s.append(self.ncaa_athlete.name)
+        s.append(self.ncaa_admin.name)
+        s.append(str(self.getRR()))
+        s.append(str(self.getLF()))
+        s.append(self.getType())
+        s.append(str(self.getPayment()))
+        s.append(str(self.getProtest()))
+        s.append(str(self.getPandemic()))
+        s.append(self.treatment.getViolate())
+        s.append(self.treatment.getSuspend())
+        s.append(self.treatment.getDraft())
+        s.append(self.treatment.getCompensation())
+        s.append(self.treatment.getSocial())
+        s.append(self.treatment.getPandemic())
+        s.append(self.LF)
+        s.append(self.RR)
         return s

@@ -9,11 +9,12 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot(title, yLabel, xLabel, labels, data):
+def plot(title, yLabel, xLabel, labels, data1, label1, data2, label2):
     x = np.arange(len(labels))
-    width = 0.5
+    width = 0.3
     fig, ax = plt.subplots()
-    rects = ax.bar(x, data, width)
+    rect1 = ax.bar(x-width/2, data1, width, label=label1)
+    rect2 = ax.bar(x+width/2, data2, width, label=label2)
 
     ax.set_ylabel(yLabel)
     ax.set_title(title)
@@ -21,8 +22,9 @@ def plot(title, yLabel, xLabel, labels, data):
     ax.set_xticklabels(labels)
     ax.set_xlabel(xLabel)
 
-    ax.bar_label(rects, padding=3)
-
+    ax.bar_label(rect1, padding=3)
+    ax.bar_label(rect2, padding=3)
+    ax.legend()
     fig.tight_layout()
 
 def rrCount(d):
@@ -175,6 +177,78 @@ def pnCount(d):
             a[6] += 1
     return a
 
+def JTViolate(d):
+    j = []
+    for p in d:
+        j.append(p.treatment.getViolate())
+    a = [0, 0]
+    for x in j:
+        if x == "Y":
+            a[0] += 1
+        elif x == "N":
+            a[1] += 1
+    return a
+
+def JTSuspend(d):
+    j = []
+    for p in d:
+        j.append(p.treatment.getSuspend())
+    a = [0, 0]
+    for x in j:
+        if x == "Y":
+            a[0] += 1
+        elif x == "N":
+            a[1] += 1
+    return a
+
+def JTDraft(d):
+    j = []
+    for p in d:
+        j.append(p.treatment.getDraft())
+    a = [0, 0]
+    for x in j:
+        if x == "Y":
+            a[0] += 1
+        elif x == "N":
+            a[1] += 1
+    return a
+
+def JTCompensation(d):
+    j = []
+    for p in d:
+        j.append(p.treatment.getCompensation())
+    a = [0, 0]
+    for x in j:
+        if x == "Y":
+            a[0] += 1
+        elif x == "N":
+            a[1] += 1
+    return a
+
+def JTSocial(d):
+    j = []
+    for p in d:
+        j.append(p.treatment.getSocial())
+    a = [0, 0]
+    for x in j:
+        if x == "Y":
+            a[0] += 1
+        elif x == "N":
+            a[1] += 1
+    return a
+
+def JTPandemic(d):
+    j = []
+    for p in d:
+        j.append(p.treatment.getPandemic())
+    a = [0, 0]
+    for x in j:
+        if x == "Y":
+            a[0] += 1
+        elif x == "N":
+            a[1] += 1
+    return a
+
 def graph(group, type, d):
     if type == "rr":
         title = group +" Racial Resentment"
@@ -209,7 +283,16 @@ for p in d2:
     d.append(p)
 white, black = race(d)
 dem, rep, ind = party(d)
+lib, mod, con = ideology(d)
 retail, neutral, resentment, linked = treatment(d)
+rr, lf = align(d)
+
+b_rr = lfCount(black)
+w_rr = lfCount(white)
+lfLabels = ["-3","-2","-1","0","1","2","3","4","5","6","7"]
+plot("Frequency of Linked Fate Scores", "Frequency", "Scores", lfLabels, b_rr, "Black", w_rr, "White")
+
+
 
 #score guide:
 #rr: racial resentment
@@ -218,8 +301,40 @@ retail, neutral, resentment, linked = treatment(d)
 #py: payment
 #pn: pandemic
 
+#w_rr = combine(white, rr)
+#w_lf = combine(white, lf)
+
+# w_rr = combine(w_rr, lib)
+# w_lf = combine(w_lf, lib)
+#
+# J_w_rr = JTPandemic(w_rr)
+# J_w_lf = JTPandemic(w_lf)
+#
+# labels = ["Yes", "No"]
+#
+# x = np.arange(len(labels))
+# width = 0.2
+# fig, ax = plt.subplots()
+# rects1 = ax.bar(x - (width/2), J_w_rr, width, label='Racial Resentment')
+# rects2 = ax.bar(x + (width/2), J_w_lf, width, label='Linked Fate')
+#
+#
+#
+# ax.set_ylabel('Responses')
+# ax.set_title("White Liberal Responses to Pandemic Question")
+# ax.set_xticks(x)
+# ax.set_xticklabels(labels)
+# ax.set_xlabel('Answers')
+# ax.legend()
+#
+# ax.bar_label(rects1, padding=3)
+# ax.bar_label(rects2, padding=3)
+#
+#
+# fig.tight_layout()
+
 #Edit this line with group, score code, and data to produce graph
-graph("Black", "lf", black)
+#graph("Black", "lf", black)
 
 
 plt.show()

@@ -83,7 +83,7 @@ class Friend(Enum):
     X = 3
 
 class Region(Enum):
-    FORIEGN = 1
+    FOREIGN = 1
     NORTHEAST = 2
     MIDATLANTIC = 3
     SOUTHEAST = 4

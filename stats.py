@@ -4,6 +4,10 @@ from person import Person
 from treatment import Treatment
 from enums import *
 from read import *
+import random as r
+import math
+
+r.seed(72)
 
 def s(i):
     return str(len(i))
@@ -19,6 +23,12 @@ def race(d):
             b.append(p)
     return w, b
 
+def snap(d, n):
+    for i in range(n):
+        x = r.randrange(0, len(d))
+        d.pop(x)
+    return d
+
 def party(s):
     d = []
     r = []
@@ -32,6 +42,20 @@ def party(s):
         elif party == Party.IND:
             i.append(p)
     return d, r, i
+
+def ideology(d):
+    l = []
+    m = []
+    c = []
+    for p in d:
+        i = p.getIdeology()
+        if i == Ideology.LIB:
+            l.append(p)
+        elif i == Ideology.MOD:
+            m.append(p)
+        elif i == Ideology.CON:
+            c.append(p)
+    return l, m, c
 
 def treatment(d):
     r = []
@@ -50,6 +74,18 @@ def treatment(d):
             lf.append(p)
     return r, n, rr, lf
 
+def align(d):
+    rr = []
+    lf = []
+    for p in d:
+        x = p.LF
+        y = p.RR
+        if x == "HIGH":
+            lf.append(p)
+        if y == "HIGH":
+            rr.append(p)
+    return rr, lf
+
 def combine(a, b):
     c = []
     for x in a:
@@ -59,7 +95,7 @@ def combine(a, b):
 
 def distribution(d, name):
     m = st.mean(d)
-    sd = st.mean(d)
+    sd = st.stdev(d)
     sd_n2, sd_n1, sd_p1, sd_p2 = 0, 0, 0, 0
     if sd >= 0:
         sd_n2 = m - (2*sd)
@@ -92,6 +128,8 @@ def distribution(d, name):
     sd2 = int(((i+mid)/t) * 100)
     print(name)
     print("mean: " + str(m) + "\t stDEV: " + str(sd))
+    print("mean + 1SD " + str(m+sd))
+    print("mean - 1SD " + str(m-sd))
     print("1 SD: " + str(sd1) + "% \t 2 SD: " +str(sd2) + "%")
 
 def scores(d, name):
@@ -114,103 +152,39 @@ def scores(d, name):
     distribution(py, "Payment")
     distribution(pn, "Pandemic")
 
+def v(s1, n1, s2, n2):
+    a = (s1/n1)
+    b = (s2/n2)
+    c = (a+b)*(a+b)
+    d = ((a*a)/(n1-1))+((b*b)/n2-1)
+    return c/d
+
+def t_test(d1, d2):
+    m1 = st.mean(d1)
+    s1 = st.variance(d1)
+    m2 = st.mean(d2)
+    s2 = st.variance(d2)
+    n1 = len(d1)
+    n2 = len(d2)
+    t = (m1-m2)/math.sqrt((s1/n1)+(s2/n2))
+    print("v: " + str(v(s1, n1, s2, n2)))
+    return t
+
 
 d = data('response1.csv')
 d2 = data('response2.csv')
 for p in d2:
     d.append(p)
 white, black = race(d)
+#white = snap(white, 400)
 dem, rep, ind = party(d)
 retail, neutral, resentment, linked = treatment(d)
 
+r_rr= []
+for p in retail:
+    r_rr.append(p.getRR())
+n_rr = []
+for p in neutral:
+    n_rr.append(p.getRR())
 
-w_dem = combine(white, dem)
-b_dem = combine(black, dem)
-w_rep = combine(white, rep)
-b_rep = combine(black, rep)
-w_ind = combine(white, ind)
-b_ind = combine(black, ind)
-
-
-w_r = combine(white, retail)
-b_r = combine(black, retail)
-w_n = combine(white, neutral)
-b_n = combine(black, neutral)
-w_rr = combine(white, resentment)
-b_rr = combine(black, resentment)
-w_lf = combine(white, linked)
-b_lf = combine(black, linked)
-
-
-w_d_r = combine(w_dem, retail)
-b_d_r = combine(b_dem, retail)
-w_r_r = combine(w_rep, retail)
-b_r_r = combine(b_rep, retail)
-w_i_r = combine(w_ind, retail)
-b_i_r = combine(b_ind, retail)
-
-
-w_d_n = combine(w_dem, neutral)
-b_d_n = combine(b_dem, neutral)
-w_r_n = combine(w_rep, neutral)
-b_r_n = combine(b_rep, neutral)
-w_i_n = combine(w_ind, neutral)
-b_i_n = combine(b_ind, neutral)
-
-
-w_d_rr = combine(w_dem, resentment)
-b_d_rr = combine(b_dem, resentment)
-w_r_rr = combine(w_rep, resentment)
-b_r_rr = combine(b_rep, resentment)
-w_i_rr = combine(w_ind, resentment)
-b_i_rr = combine(b_ind, resentment)
-
-
-w_d_lf = combine(w_dem, linked)
-b_d_lf = combine(b_dem, linked)
-w_r_lf = combine(w_rep, linked)
-b_r_lf = combine(b_rep, linked)
-w_i_lf = combine(w_ind, linked)
-b_i_lf = combine(b_ind, linked)
-
-print("Total Response: " + s(d))
-print("White: " + s(white) + "\t" + "Black: " + s(black))
-print("DEM: " + s(dem) + "\t" + "REP: " + s(rep) + "\t" + "IND: " + s(ind))
-print("Retail: " + s(retail) + "\t" + "Neutral: " + s(neutral) + "\t" + "Resentment: " + s(resentment) + "\t" + "Linked: " + s(linked))
-print()
-print("DEM -" + "\t" + "White: " + s(w_dem) + "\t" + "Black: " + s(b_dem))
-print("REP -" + "\t" + "White: " + s(w_rep) + "\t" + "Black: " + s(b_rep))
-print("IND -" + "\t" + "White: " + s(w_ind) + "\t" + "Black: " + s(b_ind))
-print()
-print("retail -" + "\t" +  "White: " + s(w_r) + "\t" + "Black: " + s(b_r))
-print("neutral -" + "\t" + "White: " + s(w_n) + "\t" + "Black: " + s(b_n))
-print("resentment -" + "\t" + "White: " + s(w_rr) + "\t" + "Black: " + s(b_rr))
-print("linked -" + "\t" + "White: " + s(w_lf) + "\t" + "Black: " + s(b_lf))
-print()
-print("retail - \t" + "white dem: " + s(w_d_r)+ "\t black dem: " + s(b_d_r) + "\t white rep: " + s(w_r_r) + "\t black rep: " + s(b_r_r) + "\t white ind: " + s(w_i_r) + "\t black ind: " + s(b_i_r))
-print("neutral - \t" + "white dem: " + s(w_d_n)+ "\t black dem: " + s(b_d_n) + "\t white rep: " + s(w_r_n) + "\t black rep: " + s(b_r_n) + "\t white ind: " + s(w_i_n) + "\t black ind: " + s(b_i_n))
-print("resentment - \t" + "white dem: " + s(w_d_rr)+ "\t black dem: " + s(b_d_rr) + "\t white rep: " + s(w_r_rr) + "\t black rep: " + s(b_r_rr) + "\t white ind: " + s(w_i_rr) + "\t black ind: " + s(b_i_rr))
-print("linked - \t" + "white dem: " + s(w_d_lf)+ "\t black dem: " + s(b_d_lf) + "\t white rep: " + s(w_r_lf) + "\t black rep: " + s(b_r_lf) + "\t white ind: " + s(w_i_lf) + "\t black ind: " + s(b_i_lf))
-print()
-print()
-
-
-scores(d, "Total")
-print("----------------------------------")
-scores(white, "White")
-print("----------------------------------")
-scores(black, "Black")
-print("----------------------------------")
-scores(dem, "Democrat")
-print("----------------------------------")
-scores(rep, "Republican")
-print("----------------------------------")
-scores(ind, "Independent")
-print("----------------------------------")
-scores(retail, "Retail")
-print("----------------------------------")
-scores(neutral, "Neutral")
-print("----------------------------------")
-scores(resentment, "Racial Resentment")
-print("----------------------------------")
-scores(linked, "Linked Fate")
+#scores(d, "Data")
