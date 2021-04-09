@@ -304,11 +304,11 @@ rr, lf = align(d)
 w_rr = combine(white, rr)
 w_lf = combine(white, lf)
 
-# w_rr = combine(w_rr, lib)
-# w_lf = combine(w_lf, lib)
+w_rr = combine(w_rr, lib)
+w_lf = combine(w_lf, lib)
 
-J_w_rr = JTViolate(w_rr)
-J_w_lf = JTViolate(w_lf)
+J_w_rr = JTPandemic(w_rr)
+J_w_lf = JTPandemic(w_lf)
 
 labels = ["Yes", "No"]
 
@@ -321,7 +321,7 @@ rects2 = ax.bar(x + (width/2), J_w_lf, width, label='Linked Fate')
 
 
 ax.set_ylabel('Responses')
-ax.set_title("White Responses to Violation Question")
+ax.set_title("White Liberal Responses to Pandemic Question")
 ax.set_xticks(x)
 ax.set_xticklabels(labels)
 ax.set_xlabel('Answers')
